@@ -38,11 +38,11 @@ if __name__ == '__main__':
                     Tabu("X[l] X[3,l]", booktabs=True,
                          to='90mm')) as tabu:
 
-                tabu.add_topline()
+                # tabu.add_topline()
                 tabu.add_row(["date", "description"], mapper=bold)
                 tabu.add_hline()
                 tabu.add_row(["2020-10-05", "meeting"])
-                tabu.add_bottomline()
+                # tabu.add_bottomline()
 
     doc.generate_pdf(compiler='latexmk',
                      compiler_args=['-xelatex'],

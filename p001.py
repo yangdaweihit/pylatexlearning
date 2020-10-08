@@ -14,29 +14,49 @@
 import os
 from pylatex import Document, Section, Command, \
     Figure, Package, Label, Ref, Tabu, MiniPage, \
-    LineBreak, LongTabu, MultiColumn
+    LineBreak, LongTabu, MultiColumn, \
+    PageStyle, Head, Foot
 from pylatex.utils import NoEscape, bold
 
 geometry_options = {
-    "head": "40pt",
-    "margin": "0.5in",
-    "bottom": "0.6in"
+    "head": "3cm",
+    "margin": "3cm",
+    "bottom": "3cm"
     # "includedfoot": False
 }
 
-# doc = Document('p001',
-#                geometry_options=geometry_options)
-
-doc = Document('p001', documentclass='hitec')
+doc = Document('p001',
+               documentclass='article',
+               geometry_options=geometry_options)
 
 # 加入宏包
 doc.packages.append(Package('ctex', options=r'UTF8'))
+doc.packages.append(Package('booktabs'))
+doc.packages.append(Package('caption'))
 
 # 导言区内容
 doc.preamble.append(Command('title', 'PyLaTeX测试'))
 doc.preamble.append(Command('author', '哈尔滨合正科技'))
 doc.preamble.append(Command('date', NoEscape(r'\today')))
+
+header = PageStyle("header")
+with header.create(Head("L")):
+    header.append("自动报告示例")
+
+with header.create(Head("R")):
+    header.append("哈尔滨合正科技")
+
+header.change_thickness('header', 1)
+
+with header.create(Foot("C")):
+    header.append(NoEscape(r'\thepage\ / \pageref{LastPage}'))
+
+doc.preamble.append(header)
+doc.change_document_style("header")
+
 doc.append(NoEscape(r'\maketitle'))
+
+doc.preamble.append(Command('captionsetup', 'belowskip=6pt,aboveskip=2pt'))
 # 正文
 # doc.append(Command('input', 'sec1.tex'))
 
@@ -55,7 +75,6 @@ with doc.create(Section('插图')):
         logo.append(Label('fig:hitlogo'))
 
     doc.extend(['如图', Ref('fig:hitlogo'), '所示'])
-    doc.append(Command('vskip1em'))
 
 with doc.create(Section('Tabu表格')):
 
@@ -88,38 +107,40 @@ with doc.create(Section('Tabu表格')):
 with doc.create(Section('LongTabu表格')):
 
     with doc.create(
-            LongTabu(" X[l]  X[l]  X[r]  X[r]  X[r] ",
-                     row_height=1.5,
-                     booktabs=True)) as data_table:
+            LongTabu(" X[l]  X[l]  X[r]  X[r]  X[r] "
+                     # row_height=1.5
+                     )) as data_table:
 
         data_table.append(Command('caption', '数据'))
         data_table.append(Command('label', 'Tab:1'))
         data_table.append(NoEscape(r'\\'))
-        # data_table.add_hline()
-        data_table.add_topline()
 
+        data_table.append(Command('toprule'))
         data_table.add_row(
             ["date", "description", "debits($)", "credits($)", "balance($)"],
             mapper=bold,
             color="lightgray")
         data_table.add_hline()
+
         data_table.append(Command(r'endfirsthead'))
 
         data_table.append(Command('caption', '数据(续表)'))
         data_table.append(NoEscape(r'\\'))
-        # data_table.add_hline()
+        data_table.append(Command('toprule'))
 
-        data_table.add_topline()
         data_table.add_row(
             ["date", "description", "debits($)", "credits($)", "balance($)"],
             mapper=bold,
-            color="lightgray")
+            # color="lightgray"
+        )
         data_table.add_hline()
 
         data_table.end_table_header()
 
         # data_table.add_hline()
-        data_table.add_bottomline()
+        # data_table.add_bottomline()
+
+        data_table.append(Command('bottomrule'))
         data_table.add_row((MultiColumn(5, align='r', data='续表见下页'), ))
         # data_table.add_hline()
         data_table.end_table_footer()
@@ -128,10 +149,12 @@ with doc.create(Section('LongTabu表格')):
         # data_table.add_row((MultiColumn(3, align='r',
         #                     data='Not Continued on Next Page'),))
         # data_table.add_hline()
+
+        data_table.append(Command('bottomrule'))
         data_table.end_table_last_footer()
 
         row = ["2016-JUN-01", "Test", "$100", "$1000", "-$900"]
-        for i in range(30):
+        for i in range(50):
             if (i % 2) == 0:
                 data_table.add_row(row, color="lightgray")
             else:
@@ -139,7 +162,7 @@ with doc.create(Section('LongTabu表格')):
 
             # data_table.add_hline()
 
-        data_table.add_bottomline()
+        # data_table.append(Command('bottomrule'))
 
 # 仅生成tex文档
 # doc.generate_tex()
