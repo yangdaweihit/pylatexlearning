@@ -21,10 +21,15 @@
 \setlength{\belowcaptionskip}{2pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand*{\mylogo}[1]{\begin{minipage}[c][2em][c]{2em}
+ \includegraphics[width=1.5em]{#1}
+  \end{minipage}
+}
+
 \pagestyle{fancy}
 \fancyhead[C]{}
 \fancyhead[L]{minipage宏包}
-\fancyhead[R]{哈尔滨合正科技}
+\fancyhead[R]{哈尔滨合正科技 \mylogo{logo.png}}
 \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0.8pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -38,6 +43,8 @@
 
 \texttt{minipage}是一个经常被使用到的环境。但它的文档目前是用德文书写的。
 本文内容来源于：\url{http://joshua.smcvt.edu/latex2e/minipage.html}。
+
+\section{语法}
 
 环境语法为：
 
@@ -66,6 +73,8 @@
 \item[s] Sretch contents out vertically; it must contain vertically
   stretchable space. 这句话没看懂。
 \end{description}
+
+\section{示例}
 
 示例(为了显示minipage的大小，将其插入到了一个tabular表格中)：
 
@@ -152,6 +161,14 @@
     \end{tabular}
   \end{minipage}              
 \end{center}
+
+\section{后记}
+
+为了显示\texttt{minipage}的作用，将本文档页眉的右部插入了一个图片。参见
+源码32行。
+
+本文测试中表格中的脚注时，发现页码中的最后页码变成线了红色。该问题暂时搁
+置起来。
 
 \end{document}
 %%% Local Variables:

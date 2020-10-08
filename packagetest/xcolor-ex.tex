@@ -1,0 +1,237 @@
+\documentclass{article}
+\usepackage[UTF8]{ctex}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{lastpage}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\usepackage{caption}% 解决表格标题与下方表格过近
+\usepackage{csvsimple}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{cprotect}% http://ctan.org/pkg/cprotect
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{tikz}
+%%%表格标题与前后文字间距%%%%%%%%%%%%%%%%%
+\setlength{\abovecaptionskip}{2pt} 
+\setlength{\belowcaptionskip}{2pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand*{\mylogo}[1]{\begin{minipage}[c][2em][c]{2em}
+ \includegraphics[width=1.5em]{#1}
+  \end{minipage}
+}
+
+\pagestyle{fancy}
+\fancyhead[C]{}
+\fancyhead[L]{color/xcolor/colortbl宏包}
+\fancyhead[R]{哈尔滨合正科技 \mylogo{logo.png}}
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0pt}
+% 该命令来源于
+% https://tex.stackexchange.com/questions/106984/how-to-draw-a-square-of-1cm-in-latex-filled-with-color
+\newcommand{\mybox}[1]{\tikz{\path[draw=#1,fill=#1] (0,0) rectangle (1em,0.5em);}}
+
+\title{color/xcolor/colortbl宏包}
+\author{哈尔滨合正科技}
+\date{2020年10月8日}
+
+\begin{document}
+\maketitle
+
+\pagecolor{green!1!white}
+
+\texttt{xcolor}是在\texttt{color}基础上扩展的颜色宏包，\texttt{colortbl}
+用于给。察看文档：
+
+\begin{verbatim}
+texdoc color
+texdoc xcolor
+texdoc colortbl
+\end{verbatim}
+
+因为没有颜色方面的基础知识，这个宏包的文档较难理解。本文主要参考了刘海洋
+撰写的《\LaTeX{}入门》的5.4节“使用彩色”(第365页至第369页)。
+
+\section{color}
+
+\texttt{color}宏包中，使用颜色的基本命令是\verb!\color!和
+\verb!\textcolor!：
+
+\begin{verbatim}
+\color{<颜色>}
+\textcolor{<颜色>}{<文字>}
+\end{verbatim}
+
+\verb!\color!属于声明式命令，它使后面的内容都使用指定的颜色输出，而
+\verb!\textcolor!则将参数<文字>以指定的颜色输出。
+
+示例：
+
+{\color{red} 这些文字都会用红色显示。}
+
+\textcolor{red}{这些文字也会用红色显示。}
+
+其它命令包括：
+
+\begin{verbatim}
+\pagecolor{<页面颜色>}  % 改变页面颜色
+\colorbox{<盒子颜色>}{<文字>} 
+\fcolorbox{<线框颜色>}{<盒子颜色>}{<文字>}
+\end{verbatim}
+
+示例：
+
+如本文档所示，\verb|\pagecolor{green!2!white}|改变了文档背景色。注意，这
+里颜色的描述方式是在\texttt{xcolor}宏包中实现的。
+
+\colorbox{lime}{lime}
+
+\fcolorbox{black}{lime}{lime填充颜色加上black框}
+
+\subsection{颜色模型}
+
+所有的颜色都可采用某种所谓颜色模型来定义。一共有3种颜色模型：gray(灰度)、
+rgb(红绿蓝)、cmyk(印刷四分色)。在使用颜色时，可指令颜色模型，然后使用特
+定颜色模型下的分量[0, 1]之间的数值来表示具体的颜色。
+
+分析下面源码：
+
+\textcolor[gray]{0.5}{ 50\ \%灰色的文字}
+
+{\color[rgb]{0.6,0.6,0} 暗黄色}
+
+\subsection{预定义颜色}
+
+预定义的颜色名见文档第48-40页，如：\mybox{black}、\mybox{lime}、
+\mybox{pink}、\mybox{violet}、\mybox{orange}等。
+
+\subsection{定义颜色}
+
+\begin{verbatim}
+\definecolor{<色彩名>}{<模型>}{<分量值>}
+\end{verbatim}
+
+紫色定义为：
+\definecolor{myPurple}{cmyk}{0.45,0.85,0,0}
+\mybox{myPurple}
+
+\section{xcolor}
+
+\begin{verbatim}
+\usepackage[<options>]{xcolor}
+\end{verbatim}
+
+这里只介绍选项\texttt{特定预定义颜色名称集合}，包
+括：\texttt{dvipsnames}、\texttt{svgnames}、\texttt{x11names}。
+
+\subsection{颜色表达式}
+
+为了方便颜色定义，\texttt{xcolor}引入了颜色表达式的记法：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ll}
+    半色调& \verb|<颜色>!<百分数>|  \\
+    混合色调& \verb|<颜色>!<百分数>!<颜色>|  \\
+    互补色& \verb|-<颜色>|  \\
+  \end{tabular}
+\end{table}
+
+示例：
+
+\textcolor{purple!70}{淡紫色，70\%紫色}
+
+{\color{blue!60!black}{60\%蓝色 与40 \%黑混合的深蓝色}}
+
+\colorbox{-red}{与红色互补的青色}
+
+\subsubsection{命名颜色表达式}
+
+\verb!\colorlet!可以给颜色表达式命名。
+
+示例：
+
+\colorlet{darkred}{red!50!black}
+\textcolor{darkred}{定义暗红色}
+
+\section{colortbl}
+
+\texttt{colortbl}用来实现彩色表格，可设置表列、表行、单元格或表格线的颜
+色。
+
+\verb!columncolor!示例：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{>{\columncolor{gray}}c >{\columncolor{lightgray}}c}
+    深 & 浅 \\
+    darker & lighter \\
+  \end{tabular}
+\end{table}
+
+\verb!rowcolor!示例：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{>{\columncolor{gray}}c >{\columncolor{lightgray}}c}
+    \hline \rowcolor{yellow}
+    深 & 浅 \\
+    darker & lighter \\
+  \end{tabular}
+\end{table}
+
+\verb!cellcolor!示例：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cccc}
+    \hline
+    No & No & \cellcolor{lightgray}Yes & No \\
+   \cellcolor{lightgray} No & No & Yes   & No \\
+    \hline
+  \end{tabular}
+\end{table}
+
+当给\texttt{xcolor}宏包加上\texttt{table}选项时，它支持如下的命令：
+
+\begin{verbatim}
+\rowcolors[<横线命令>]{<起始行>}{<奇数行色彩>}{<偶数行色彩>}
+\rowcolors*[<横线命令>]{<起始行>}{<奇数行色彩>}{<偶数行色彩>}
+\end{verbatim}
+
+这些命令用在\texttt{tabular}和\texttt{array}环境之前，可以让表格从<起始
+行>开始，在奇数行和偶数行使用不同的背景色，同时在每一行前后执行可选的<横
+线命令>画出横线，<横线命令>可以使用\verb!\hline!，这样每行表格会自动画出
+横线。对于是带星号的版本，则<横线命令>只要交错景色的行执行。
+
+示例：
+
+\begin{table}[H]
+  \centering
+  \rowcolors{2}{black!20}{black!10}
+  \begin{tabular}{crrr}
+    \hline
+    \rowcolor{black!30}
+    项目 & 数值 & 数值 & 数值 \\
+    A & 10 & 20 & 30 \\
+    B & 10 & 20 & 30 \\
+    C & 10 & 20 & 30 \\
+    D & 10 & 20 & 30 \\
+    E & 10 & 20 & 30 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

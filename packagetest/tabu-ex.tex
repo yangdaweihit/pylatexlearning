@@ -477,8 +477,9 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
   名 & 姓 & 入学考试 & 性别  &  年级   \\
   \midrule
   \endfirsthead
-  \refstepcounter{elio} \\
-  \caption* {表 \ref{tbl:longtabu}：longtabu长表实例 (续表\theelio{})} \\
+  \multicolumn{5}{c}{
+  \refstepcounter{elio}
+  表 \ref{tbl:longtabu}：longtabu长表实例 (续表\theelio{})} \\
   \toprule
   名 & 姓 & 入学考试 & 性别  &  年级   \\
   \midrule
