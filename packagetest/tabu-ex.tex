@@ -1,0 +1,545 @@
+\documentclass{article}
+\usepackage[UTF8]{ctex}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{lastpage}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{caption}% 解决表格标题与下方表格过近
+\usepackage{csvsimple}
+%%%表格标题与前后文字间距%%%%%%%%%%%%%%%%%
+\setlength{\abovecaptionskip}{2pt} 
+\setlength{\belowcaptionskip}{2pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhead[C]{}
+\fancyhead[L]{\LaTeX{}表格}
+\fancyhead[R]{哈尔滨合正科技}
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\title{\LaTeX{}表格}
+\author{哈尔滨合正科技}
+\date{2020年10月6日}
+
+\begin{document}
+\maketitle
+% 在我的Emacs配置中：
+% C-c RET 插入宏
+% C-c C-e 插入环境
+
+为自动报告开发者在较短时间内了解\LaTeX{}各类表格环境，撰写本文档。文档从
+基础到高级，包括了\texttt{tabular}、\texttt{taularx}、\texttt{longtable}、
+\texttt{tabu}和\texttt{longtabu}。
+
+本文适合结合代码讲解表格用法，仅浏览\texttt{pdf}文档无法了解表格的全部用
+法。
+
+\section{Tabular}
+
+Tabular是\LaTeX{}原装的表格环境。后来功能更加强大的表格环境都是在Tabular
+基础上逐步丰富起来的。要查看关于Tabular的手册，在终端键入：
+
+\begin{verbatim}
+  texdoc array
+\end{verbatim}
+
+你应该会感到奇怪：为什么不是\texttt{tabular}，而是\texttt{array}。因为文
+档的文件名是\texttt{array.pdf}。\texttt{tabular}和\texttt{array}是两个宏
+包，它们的说明放在了一个文档中。
+
+Tabular的环境用法为：
+
+\begin{verbatim}
+\begin{tabluar}[选项]{列式标记}
+  <item1> & <item2> ... \\
+  \hline
+  <item1> & <item2> ... \\
+\end{tabular}
+\end{verbatim}
+其中：\verb!&!用来分隔单元格；\verb!\\!用来换行；\verb!\hline!用来在在行间绘横线。
+
+在\verb![ ]!中的选项只在需要时写入，选项包括：\texttt{t}、\texttt{b}。用
+于进行竖向对齐。如：
+
+\begin{tabular}{|c|}
+center-\\ aligned \\
+\end{tabular}
+，
+\begin{tabular}[t]{|c|}
+center-\\ aligned \\
+\end{tabular}
+，
+\begin{tabular}[b]{|c|}
+center-\\ aligned \\
+\end{tabular}
+
+\subsection{列式标记}
+
+Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参数。常见的列式
+标记见下表。
+
+\begin{table}[H]
+  \centering
+  \caption{列式标记}
+  \label{tab:col-spec}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{列格式}  & \textbf{说明} \\
+    \midrule
+    \verb!l/c/r!   & 单元格内容左对齐/居中/右对齐，不折行 \\
+    \verb!p{<width>}!  & 单元格固定宽度<width>，可自动折行 \\
+    \verb!|!       & 绘制竖线 \\
+    \verb!@{<string>}!  & 自定义内容<string> \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+下面举个例子：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lcr|p{6em}}
+    \hline
+    left & center & right & par box with fixed width\\
+    L & C & R & P \\
+    \hline
+  \end{tabular}
+\end{table}
+
+表格中每行的单元格数目不能多于列格式里\texttt{l/c/r/p}的总数(可以少于这
+个总数)，否则出错。
+
+\texttt{@} 格式可在单元格前后插入任意的文本,但同时它也消除了单元格前后额
+外添加的间距。\texttt{@}格式可以适当使用以充当“竖线”。特别
+地,\texttt{@{}} 可直接用来消除单元格前后的间距:
+
+\begin{table}[H]
+  \centering
+  % 在第一列左侧插入一个"空"，消除了默认的间距
+  % 在第一列的右侧插入一个冒号
+  % 在第三列的右侧插入一个“空”，消除了默认的间距
+  \begin{tabular}{@{}l @{:}l  r@{}}
+    \hline
+    1 & 1 & one \\
+    11 & 3 & eleven \\
+    \hline
+  \end{tabular}
+\end{table}
+
+在列式标记中，还提供了一种简写方式：\verb!*{<n>}{<列式标记>}!，比如下面两
+种写是等效的：
+
+\begin{verbatim}
+\begin{tabular}{|c|c|c|c|c|p{4em}|p{4em}|}
+\begin{tabular}{|*{5}{c|}*{2}{p{4em}|}}
+\end{verbatim}
+
+\texttt{array}宏包提供了一个辅助格式\texttt{>}和\texttt{<}，用于给列格式
+前后加上修饰命令。
+   
+\begin{table}[htpb]
+  \centering
+  % 给第一列开始加了一个修饰，即\itshape
+  % 给第一列后面加了一个修饰，加上了一个*
+  \begin{tabular}{ >{\itshape}l<{*}   r}
+    \hline
+    italic & normal \\
+    column & column \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  % 给第一列开始加了一个修饰，即$
+  % 给第一列后面加了一个修饰，加$
+  % 这样第一列就可以输入数学公式了
+  \begin{tabular}{>{$}r<{$ --} @{\ }l}
+    % \hline
+    \alpha & normal \\
+    \sqrt{2} & column \\
+    % \hline
+  \end{tabular}
+\end{table}
+
+同理，还可以通过辅助修饰符，实现对固定宽度列对齐方式的定义，如：
+
+\begin{table}[H]
+  \centering
+  % 给第一列开始加了一个修饰，即$
+  % 给第一列后面加了一个修饰，加$
+  % 这样第一列就可以输入数学公式了
+  % 一般还要加额外的命令 \arraybackslash 以免出错
+  % \centering等对齐命令会破坏表格环境里 \\换行命令的定
+  % 义,\arraybackslash 用来恢复之。
+  \begin{tabular}{ | >{\centering\arraybackslash}p{8em} | r |}
+    \hline
+    center & normal \\
+    \hline
+    text & column \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\texttt{array}宏包还提供了类似 p 格式的 m 格式和 b 格式,三者分别在垂直方
+向上靠顶端对齐、居中以及底端对齐。
+
+\newcommand{\txt}{a b c d e f g h i}
+
+\begin{table}[H]  \centering
+  \begin{tabular}{cp{2em}m{2em}b{2em}}
+    \hline
+    pos & \txt & \txt  & \txt \\ \hline
+  \end{tabular}
+\end{table}
+
+\texttt{Tabular}新增了一对格式：\verb!w{align}{width}!和
+\verb!W{align}{width}!，用于同时定义宽度和对齐方式。\texttt{W}的特殊之
+处在于，当内容不适合时，会弹出警告。
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|w{r}{6em}|w{c}{6em}|W{l}{2em}|} \hline pos &
+    righ-aligned & center & left \\ \hline
+  \end{tabular}
+\end{table}
+
+关于\texttt{Tabular}的列格式定义还有一些，详见\texttt{array.pdf}。
+
+\subsection{横线}
+
+我们已经在之前的例子见过许多次绘制表格线的\verb!\hline!命令。另外 \verb!\cline{⟨i⟩-⟨j⟩}!用来
+绘制跨越部分单元格的横线:  
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|*{3}{c|}}
+    \hline
+    4 & 9 & 2 \\ \cline{2-3}
+    3 & 5 & 7 \\ \cline{1-1}
+    8 & 1 & 6 \\ \hline
+  \end{tabular}
+\end{table}
+
+在科技论文排版中广泛应用的表格形式是三线表,形式干净简明。三线表由\texttt{booktabs}宏包
+支持,它提供了 \verb!\toprule!、\verb!\midrule! 和 \verb!\bottomrule! 命令用以排版三线表的三条线,以及和
+\verb!\cline! 对应的\verb!\cmidrule!。除此之外,最好不要用其它横线以及竖线:
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cccc}
+    \toprule
+    & \multicolumn{3}{c}{Numbers} \\
+    \cmidrule{2-4}
+    & 1 & 2 & 3 \\
+    \midrule
+    Alphabet & A & B & C \\
+    Roman & I & II& III \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{行距控制}
+
+有两种方式可以改变表格的行间距。
+\begin{itemize}
+\item 修改参数 \verb!\arraystretch!可以得到行距更加宽松
+的表格
+\item 换行命令\verb!\\! 添加可选参数
+\end{itemize}
+
+如下表示例：
+  
+\renewcommand\arraystretch{1.8}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|}
+    \hline
+    Really loose \\  \hline
+    Really loose \\ [6pt] \hline
+    tabular rows.\\ \hline
+  \end{tabular}
+\end{table}
+\renewcommand\arraystretch{1}
+\section{tabularx}
+
+\texttt{tabularx}宏包引入一个新的选项\texttt{X}。使得表格总宽度可以先定义，
+然后自动计算\verb!X!定义的列宽度。
+
+要察看\texttt{tabuarlx}的文档，在终端键入:
+\begin{verbatim}
+  texdoc tabularx
+\end{verbatim}
+
+看个例子：
+
+\begin{table}[h!]
+  \centering
+  % 除了第一列是按实际所需宽度定义外
+  % 其它两列按剩余宽度平分
+  \begin{tabularx}{0.8\textwidth}{|c|X|X|}
+    \hline
+    a &  b & c \\
+    \hline
+    aaaaa &  b & c  \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+为了将上表中的后两列也居中对齐，仍然需要按\texttt{tabular}环境列格式的辅
+助修饰符做定义。
+
+\begin{table}[h!]
+  \centering
+  % 除了第一列是按实际所需宽度定义外
+  % 其它两列按剩余宽度平分
+  \begin{tabularx}{0.8\textwidth}{|c|>{\centering\arraybackslash}X|X|}
+    \hline
+    a &  b & c \\
+    \hline
+    aaaaa &  b & c  \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+\section{longtable}
+
+长表格宏包\texttt{longtable}相当于\texttt{tabular}在能力上的扩展，即具备
+了跨页能力。
+
+需要注意的是，它将浮动环境\texttt{table}的功能包括了进来，即拥有
+了\verb!\caption!命令，还可以和\texttt{table}一样被\verb!\listoftabls!命
+令列入表格目录中。这意味着，你不应该将\texttt{longtable}环境置于
+\texttt{table}环境中，它本身就构成了一个浮动体。
+
+\texttt{longtable}手册用一个长表格实例展示了它的所有功能。这里也给出一个
+完整的示例。
+
+\begin{longtable}{@{*}r||p{2in}@{*}}
+
+  \caption{长表实例} \\
+  \toprule
+  首列    &  次列  \\
+  \midrule
+  \endfirsthead
+
+  \caption{长表实例(续表)} \\
+  \toprule
+  \textbf{首列}    &  \textbf{次列}  \\
+  \midrule
+  \endhead
+
+  \midrule
+  \multicolumn{2}{r}{续表见下页}\\%
+  \endfoot
+  
+  \bottomrule
+  \endlastfoot
+
+  longtable columns are specificed & in the \\
+  same way as in the tabular       & environment. \\
+  \verb!{@{*}r||p{1in}@{*}}!          & in this case. \\
+  Each row ends with a             & \verb!\\! command. \\
+  The \verb!\\! command has an      & 可选  \\
+  参数，如同在                    & \texttt{tabular} 环境中。 \\
+  看到[10pt]的效果了吗              & ?   \\  [10pt]
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  很多行                            & 象这样。 \\
+  来一个\verb!\hline!            & 。   \\
+  \hline
+  来两个\verb!\hline\hline!   & 。 \\
+  \hline\hline 
+  \multicolumn{2}{|c|}{这是跨两列的效果} \\
+    选项\verb![t] [b] [c]!    & 不能再被使用。  \\
+    \verb![l] [r] [c]! 中的选项 &  之一可被使用。 \\
+\end{longtable}
+  
+\section{tabu和longtabu}
+
+\texttt{tabu}宏包极大了扩展了表格的能力，\texttt{longtabu}是其跨页长表版
+本。\texttt{tabu}的功能十分强大，让人意外的是，它的作者已经失联。最新的
+版本停留在2011年2月16日的2.8。
+
+先看个简单的示例。
+
+\begin{tabu} to 140mm {|X[1,l] | X[2,c] | X[3,c] | X[1,r] | }
+\hline
+|\dotfill | & Text  & Text & Text \\ 
+\hline
+Text & Text & Text & Text  \\
+\end{tabu}
+
+\subsection{\texttt{tabu}环境}
+
+\subsubsection{tabu，tabu to 和 tabu spread}
+\begin{verbatim}
+\begin {tabu} [pos] {tabular preamble}
+\begin {tabu} to <dimen> [pos] {tabular preamble}
+\begin {tabu} spread <dimen> [pos] {tabular preamble}
+\end{verbatim}
+
+\texttt{tabu}环境和\texttt{tabular}行为基本一致，改进之处包括：
+\begin{itemize}
+\item 在\texttt{tabu}中可以使用\textbf{footnotes}；
+\item \texttt{X}列带有选项，包括：宽度系数、对齐定义(r，c，l或R，C，L，
+  J)、列类型(p,m,b)；
+\item 可在\texttt{tabu}中同时包含文字和公式；
+\item \texttt{tabu}中的表格中可以包含\texttt{tabular}、\texttt{tabular*}、
+  \texttt{tabularx}或\texttt{tabu}；反之，\texttt{tabu}可包含于
+  \texttt{tabular}、\texttt{tabularx}之中；
+\item \texttt{tabu}和很多宏包兼容，可以使用\verb!\raggedleft!、
+  \verb!\raggedright!或\verb!\centering!，且不必考虑
+  \verb!\arraybackslash!，而\verb!\\!也可以正常在\texttt{X}列中使用。
+\end{itemize}
+
+\verb!\begin{tabu} to <dimen>! 定义了表格整体的宽度。
+
+\verb!\begin{tabu} spread <dimen>! 定义了表格在自然宽度外增加\verb!<dimen>!。
+
+\subsubsection{longtabu，longtabu to 和 longtabu spread}
+\begin{verbatim}
+\begin {longtabu} [l | c | r] {tabular preamble}
+\begin {longtabu} to <dimen> [l | c | r] {tabular preamble}
+\begin {longtabu} spread <dimen> [l | c | r] {tabular preamble}
+\end{verbatim}
+
+\texttt{longtabu}就是可跨页的\texttt{tabu}。它是基于\texttt{longtable}的，
+所以使用时必须加载\texttt{longtable}宏包。由此，\verb!\endhead!、
+\verb!\endfirsthead!、\verb!\endfoot!、\verb!\endlastfoot!或
+\verb!\caption!均可在\texttt{longtabu}中使用。
+
+\texttt{longtabu}相对于\texttt{longtable}增强之处在于，可使用\texttt{X}
+列，以及对于水平和竖直线的线定义。
+
+% \caption{Elio}\label{whatever}\\
+% \endfirsthead
+% \refstepcounter{elio}Elio-\theelio
+% \endhead
+
+
+\newcounter{elio}\setcounter{elio}{0} 
+\begin{longtabu} to 100mm {X[3, l] X[3, l] X[3, c] X[2, c] X[2, r] }
+  \caption{longtabu长表实例}\label{tbl:longtabu} \\
+  \toprule
+  名 & 姓 & 入学考试 & 性别  &  年级   \\
+  \midrule
+  \endfirsthead
+  \refstepcounter{elio} \\
+  \caption* {表 \ref{tbl:longtabu}：longtabu长表实例 (续表\theelio{})} \\
+  \toprule
+  名 & 姓 & 入学考试 & 性别  &  年级   \\
+  \midrule
+  \endhead
+  
+  \midrule
+  \multicolumn{5}{r}{续表\theelio{}见下页}\\%
+  \endfoot
+  
+  \bottomrule
+  \endlastfoot
+  \csvreader[late after line=\\]{data.csv}{
+    name=\name,
+    givenname=\givenname,
+    matriculation=\matriculation,
+    gender=\gender,
+    grade=\grade
+  }{\name & \givenname &\matriculation & \gender & \grade}
+\end{longtabu}
+
+
+\subsubsection{X列}
+
+\texttt{tabu X}列可视为\texttt{taluarx X}列的增强版，但彼此不能相互作用。
+
+\begin{itemize}
+\item \textbf{宽度系数}为\texttt{X}列的可选项。如\verb!X[2.5]X[1]!，等同
+  于\verb!X[2.5]X!、\verb!X[5]X[2]!；
+\item \textbf{负宽度系数}为\texttt{X}列的可选项。如\verb!X[-2.5]X[1]!，等同
+  于\verb!X[-2.5]X!、\verb!X[-5]X[2]!；
+
+  负宽度指的是首列\textbf{顶多}是第二列的是2.5倍。如果首列自然宽度小于第
+  二列宽的2.5倍，则会缩至其自然宽度。
+\item 水平对齐定义更为容易，如\verb!X[5,r]|X[2,c]!。竖向对齐也可定义，如
+  \verb!X[5,r,m]X[2,p,c]!，其中逗号可省略。
+\item \texttt{tabu X}列可由\verb!\multicolumn!跨列；
+\end{itemize}
+
+关于\texttt{tabu spread}的效果见\texttt{tabu.pdf}第11页。
+
+% \begin{tabu}{X[-5]X[2]}
+
+% \tabulinestyle{3pt ForestGreen}
+% \begin{tabu}{|X[1m]|X[cm]|}%
+% \tabucline- \savetabu{FirstNegativTest}
+% % $\begin{tabu} ({X[$]X[$]})
+% % \alpha & \beta \\
+% % \gamma & \delta + \epsilon + \zeta+ \eta + \theta
+% % \end{tabu}$ 
+% % \begin{tabu}({XX})
+% %   $\alpha$ & $\beta$ \\
+% % \end{tabu}
+% adfadsf
+% & 
+% This is a tabu with negativ width coefficients for \texttt{X} columns
+% \\ \tabucline-
+% \end{tabu}
+
+\subsection{线引导或颜色}
+
+\begin{table}[H]
+  \setlength\doublerulesep{1pt}
+  \centering
+  \begin{tabu} to 0.8\textwidth {|[1.5pt] |[0.5pt] X[c] | X[c] | [0.5pt] |
+      [1.5pt ]} 
+    Hello & World \\
+    Hello & World \\
+    \hline
+  \end{tabu}
+\end{table}
+
+\subsection{修改一行内的字体和对齐格式}
+
+\subsection{其它功能}
+\subsection{修改一行内的字体和对齐格式}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

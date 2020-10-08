@@ -1,0 +1,65 @@
+\documentclass[a4paper]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{lipsum}
+\usepackage{kantlipsum}
+\usepackage[ paperheight  =297mm,paperwidth   =210mm,  % or: "paper=a4paper"
+             % layoutheight =197mm,layoutwidth  =130mm,
+             % layoutvoffset= 50mm,layouthoffset= 40mm,
+             margin=3cm, %includeheadfoot,
+             % showframe=true,
+             showcrop=true]{geometry}
+\usepackage{pdflscape} % 注释掉这一行再编译一下，对比下效果
+\usepackage{lscape}
+\usepackage{everypage}
+
+% 这部分改写\Lpagenumber，是为了在旋转页面时，同时将页码置于页面底部
+% https://tex.stackexchange.com/questions/278113/single-landscape-page-with-page-number-at-the-bottom
+\newcommand{\Lpagenumber}{\ifdim\textwidth=\linewidth\else\bgroup
+  \dimendef\margin=0 %use \margin instead of \dimen0
+  \ifodd\value{page}\margin=\oddsidemargin
+  \else\margin=\evensidemargin
+  \fi
+  \raisebox{\dimexpr -\topmargin-\headheight-\headsep-0.5\linewidth}[0pt][0pt]{%
+    \rlap{\hspace{\dimexpr \margin+\textheight+\footskip}%
+    \llap{\rotatebox{90}{\thepage}}}}%
+\egroup\fi}
+\AddEverypageHook{\Lpagenumber}%
+
+\begin{document}
+
+宏包lipsum是从公元前45年的古典拉丁文学著作中截取150个段落中挑选段
+落。\verb!\lipsum!命令用于显示这部著作中的若干段落，常用于测试排版效果。
+
+类似的还有一个宏包\verb!kantlipsum!
+
+\lipsum[1-3]
+
+\newgeometry{left=3cm,right=2cm,bottom=3cm, twocolumn,landscape}
+\savegeometry{mylandscape}
+
+注意，虽然，在上个命令选项中使用了landscape，但页面并没有转为横向。
+\lipsum[1-3]
+
+\restoregeometry
+
+现在恢复了原来的页面布置。
+
+\lipsum[1-3]
+
+\begin{landscape}
+\pagestyle{empty}%
+  要旋转页面，需要使用landscape包。这部分内容会自成一页，视角也会旋转过
+  来。但问题是，页码仍然会随着页码旋转过去。
+\end{landscape}
+\pagestyle{plain}%
+
+\restoregeometry
+
+\kant[1-3]
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

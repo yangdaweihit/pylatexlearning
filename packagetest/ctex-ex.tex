@@ -1,0 +1,88 @@
+\documentclass{report}
+\usepackage[UTF8,heading=true, linespread=1.5]{ctex}
+\usepackage[left=2cm, right=2cm]{geometry}%
+\usepackage{fancyhdr}
+\usepackage{tabu}
+\usepackage{booktabs}
+
+\title{fancyhdr测试}
+\author{合正科技}
+\date{\today}
+
+\ctexset {
+  % chapter/name = {第,章},
+  chapter/name = {第,章}, % 该选项只有在heading=true时才合法
+  section/name = {\S},
+% part/pagestyle = empty,
+% chapter = {
+% format = \raggedright,
+% pagestyle = empty,
+% },
+% section = {
+% name
+% = {第,节},
+% number = \chinese{section},
+% }
+}
+
+\begin{document}
+
+
+\maketitle
+% \thispagestyle{fancy}
+
+% 字号命令
+\begin{centering}
+\zihao{1}
+
+{\heiti 东奔西走暮云春树}
+
+\zihao{-2}
+
+{\fangsong 东奔西走暮云春树}
+
+
+\zihao{-4}
+
+{\kaishu 东奔西走暮云春树}
+
+\end{centering}
+
+
+\chapter{hello}
+\section{foo}
+\subsection{foos}
+
+\begin{table}[h!]
+   \caption{数据}
+   \label{tbl:data}
+   \centering
+   \begin{tabu} to 0.5\textwidth {X[l]X[2,c]X[r]}
+   \toprule
+   a & b & c\\
+   \midrule
+   aadfadf & badsfadsfadsf & cadsasdfa\\
+   aadfadf & badsfadsfadsf & cadsasdfa\\
+   aadfadf & badsfadsfadsf & cadsasdfa\\
+   \bottomrule
+   \end{tabu}
+\end{table}
+
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\newpage
+
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+\LaTeX{} Bases: pylatex.table.LongTable, pylatex.table.Tabu
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ctex-ex"
+%%% End:

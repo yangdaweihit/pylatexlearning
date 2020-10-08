@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{pdflscape}
+\usepackage{everypage}
+\usepackage{lipsum}
+
+\newcommand{\Lpagenumber}{\ifdim\textwidth=\linewidth\else\bgroup
+  \dimendef\margin=0 %use \margin instead of \dimen0
+  \ifodd\value{page}\margin=\oddsidemargin
+  \else\margin=\evensidemargin
+  \fi
+  \raisebox{\dimexpr -\topmargin-\headheight-\headsep-0.5\linewidth}[0pt][0pt]{%
+    \rlap{\hspace{\dimexpr \margin+\textheight+\footskip}%
+    \llap{\rotatebox{90}{\thepage}}}}%
+\egroup\fi}
+\AddEverypageHook{\Lpagenumber}%
+
+\begin{document}
+\begin{landscape}
+\pagestyle{empty}%
+\lipsum[1]
+\newpage
+\noindent\rule{\linewidth}{\textheight}% fill text area
+\end{landscape}
+\pagestyle{plain}%
+\lipsum[2]
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "test"
+%%% End:

@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{booktabs}
+\usepackage{csvsimple}
+
+\begin{document}
+\newcounter{elio}\setcounter{elio}{0} 
+\begin{longtabu} to 100mm {X[3, l] X[3, l] X[3, c] X[2, c] X[2, r] }
+  \caption{table-name}\label{tbl:longtabu} \\
+  \toprule
+  name & givenname & score & gender  &  grade   \\
+  \midrule
+  \endfirsthead
+  \caption* {Table \ref{tbl:longtabu}：table-name (continued-\theelio{})} \\
+  \toprule
+  name & givenname & score & gender  &  grade   \\
+  \midrule
+  \endhead
+  
+  \midrule
+  \multicolumn{5}{r}{\refstepcounter{elio} continued table \theelio{} at
+  the next page}\\%
+  \endfoot
+  
+  \bottomrule
+  \endlastfoot
+  \csvreader[late after line=\\]{data.csv}{
+    name=\name,
+    givenname=\givenname,
+    matriculation=\matriculation,
+    gender=\gender,
+    grade=\grade
+  }{\name & \givenname &\matriculation & \gender & \grade}
+\end{longtabu}
+
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
