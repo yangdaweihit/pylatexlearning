@@ -10,9 +10,10 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{lastpage}
-\usepackage[dvipsnames,table]{xcolor}
+\usepackage[dvipsnames,svgnames]{xcolor}
 \usepackage{caption}% 解决表格标题与下方表格过近
 \usepackage{csvsimple}
+\usepackage{cprotect}% http://ctan.org/pkg/cprotect
 %%%表格标题与前后文字间距%%%%%%%%%%%%%%%%%
 \setlength{\abovecaptionskip}{2pt} 
 \setlength{\belowcaptionskip}{2pt}
@@ -35,7 +36,6 @@
 % 在我的Emacs配置中：
 % C-c RET 插入宏
 % C-c C-e 插入环境
-
 为自动报告开发者在较短时间内了解\LaTeX{}各类表格环境，撰写本文档。文档从
 基础到高级，包括了\texttt{tabular}、\texttt{taularx}、\texttt{longtable}、
 \texttt{tabu}和\texttt{longtabu}。
@@ -392,18 +392,39 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
   
 \section{tabu和longtabu}
 
+
 \texttt{tabu}宏包极大了扩展了表格的能力，\texttt{longtabu}是其跨页长表版
 本。\texttt{tabu}的功能十分强大，让人意外的是，它的作者已经失联。最新的
 版本停留在2011年2月16日的2.8。
 
-先看个简单的示例。
+先看几个个简单的示例。
 
-\begin{tabu} to 140mm {|X[1,l] | X[2,c] | X[3,c] | X[1,r] | }
-\hline
-|\dotfill | & Text  & Text & Text \\ 
-\hline
-Text & Text & Text & Text  \\
-\end{tabu}
+\begin{table}[H]
+ \centering
+ \begin{tabu} to 80mm {|X[1,l] | X[2,c] | X[3,c] | X[1,r] | }
+ \hline
+ |\dotfill | & Text  & Text & Text \\ 
+ \hline
+ Text & Text & Text & Text  \\
+ \hline
+ \end{tabu}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \tabulinestyle {3pt ForestGreen}
+  \begin {tabu}{|X[m]|X[cm]|}
+    \tabucline - 
+    \begin{tabu}{X[$]X[$]}
+    \alpha & \beta \\
+    \gamma & \delta + \epsilon + \zeta + \eta + \theta
+    \end{tabu}
+    &
+    This is a tabu with negativ width coefficients for \texttt{X} columns
+    \\ \tabucline -
+  \end{tabu}
+\end{table}
+
 
 \subsection{\texttt{tabu}环境}
 
@@ -447,11 +468,7 @@ Text & Text & Text & Text  \\
 \texttt{longtabu}相对于\texttt{longtable}增强之处在于，可使用\texttt{X}
 列，以及对于水平和竖直线的线定义。
 
-% \caption{Elio}\label{whatever}\\
-% \endfirsthead
-% \refstepcounter{elio}Elio-\theelio
-% \endhead
-
+在下表源码中，注意计数器及\texttt{csvexample}的使用。
 
 \newcounter{elio}\setcounter{elio}{0} 
 \begin{longtabu} to 100mm {X[3, l] X[3, l] X[3, c] X[2, c] X[2, r] }
@@ -483,7 +500,7 @@ Text & Text & Text & Text  \\
 \end{longtabu}
 
 
-\subsubsection{X列}
+\subsubsection{X列——控制水平空间}
 
 \texttt{tabu X}列可视为\texttt{taluarx X}列的增强版，但彼此不能相互作用。
 
@@ -502,30 +519,37 @@ Text & Text & Text & Text  \\
 
 关于\texttt{tabu spread}的效果见\texttt{tabu.pdf}第11页。
 
-% \begin{tabu}{X[-5]X[2]}
+\cprotect\subsubsection{\verb!\tabuphantomline!}
 
-% \tabulinestyle{3pt ForestGreen}
-% \begin{tabu}{|X[1m]|X[cm]|}%
-% \tabucline- \savetabu{FirstNegativTest}
-% % $\begin{tabu} ({X[$]X[$]})
-% % \alpha & \beta \\
-% % \gamma & \delta + \epsilon + \zeta+ \eta + \theta
-% % \end{tabu}$ 
-% % \begin{tabu}({XX})
-% %   $\alpha$ & $\beta$ \\
-% % \end{tabu}
-% adfadsf
-% & 
-% This is a tabu with negativ width coefficients for \texttt{X} columns
-% \\ \tabucline-
-% \end{tabu}
+在\texttt{tabu}中使用\verb!\multicolumn!列时，需要表格结尾处加上命
+令\verb!\tabuphantomline!。原因没看懂，在手册中的第12页。
+
+在\verb!\tabuphantomline!之后，不得跟
+上\verb!\cr!或\verb!\\!或\verb!\tabularnewline!。见下面的示例：
+
+\begin{tabu}{|X|X|X[2]|} \tabucline-
+  a & b & c \\
+  \tabucline-
+  \multicolumn{2}{|c|}{Hello} & World \\
+  \tabucline-
+\tabuphantomline  %注意此处要加上这个命令
+\end{tabu}
+
+\cprotect\subsubsection{\verb!\tabulinesep!和\verb!\extrarowsep!—控制竖向
+  空间}
+
+示例见文档第13页。
 
 \subsection{线引导或颜色}
+
+\subsubsection{竖线：|有一个选项参数}
+
+见下表源码，竖线后面可以跟线宽及颜色选项：
 
 \begin{table}[H]
   \setlength\doublerulesep{1pt}
   \centering
-  \begin{tabu} to 0.8\textwidth {|[1.5pt] |[0.5pt] X[c] | X[c] | [0.5pt] |
+  \begin{tabu} to 0.8\textwidth {|[1.5pt red] |[0.5pt blue] X[c] | X[c] | [0.5pt] |
       [1.5pt ]} 
     Hello & World \\
     Hello & World \\
@@ -533,10 +557,111 @@ Text & Text & Text & Text  \\
   \end{tabu}
 \end{table}
 
+\cprotect\subsubsection{多个\verb!\firsthline!和\verb!\lasthline!}
+
+这两个命令的用途没太看懂，暂时搁置。
+
+\subsubsection{更多样式}
+
+\begin{verbatim}
+\taburulecolor {<rule color>}
+\taburulecolor |<double rule sep color>|{<rule color>}
+\end{verbatim}
+
+\verb!\taburulecolor!用来定义线的颜色，包括：\verb!\hline!、
+\verb!\firsthline!、\verb!\lasthline!，以及竖线。可改变竖线颜色，需激活
+所谓标准线，方法是使用命令\verb!\tabulinestyle{}!或\verb!\tabureset!。
+
+命令中两条竖线中的可选参数表示两条线间的颜色。若没有，则不填充颜色。
+
+见下表源码，分析命令功能。
+
+\begin{table}[H]
+  \centering
+  \taburulecolor|lime|{DarkSlateBlue}
+  \arrayrulewidth =1mm \doublerulesep=2mm
+  \begin{tabu} spread 0pt {|c|}
+  \firsthline \hline
+  a tabu \\
+  environment \\
+  made with \\
+  \lasthline[5mm] \hline \hline
+  \end{tabu} 
+\end{table}
+
+\begin{verbatim}
+\tabulinestyle {hline style specificationi}
+\end{verbatim}
+
+\verb!\tabulinestyle!定义竖线和水平线的样式。
+
+体会下表源码中\verb!\tabulinestyle!的用法。
+
+\begin{table}[H]
+  \centering
+  \taburulecolor|lime|{DarkSlateBlue}
+  % 线宽是3pt；实线蓝色，长度3pt；断线无色，长度为1pt
+  \tabulinestyle{3pt on 3pt blue off 1pt }
+  \begin{tabu} spread 0pt {|c|}
+  \firsthline \hline
+  a tabu \\
+  environment \\
+  made with \\
+  \lasthline[5mm] \hline \hline
+  \end{tabu} 
+\end{table}
+
+\begin{verbatim}
+\tabucline [style or spec.]{start-end}
+\end{verbatim}
+
+\verb!\tabucline!定义了局部线的样式和起止列。例子见文档第17页。它的功能
+很强大，可定义线的任意样式，详见文档中的示例。
+
+\subsubsection{自动水平线}
+
+\begin{verbatim}
+\everyrow{code}
+\end{verbatim}
+
+\verb!everyrow!用于自动插入水平线。见下表示例。
+
+\begin{table}[H]
+  \centering
+  \begin{tabu} to .5\linewidth {cX[2mc]X}
+    \tabucline[1pt] -
+    \everyrow{\tabucline[on 2pt] -}
+    This i s & a small example &of a \texttt{tbu} \\
+    which &automatically &inserts \\
+    a horizontal &line after &each of its row \everyrow{} \\
+    \tabucline[1pt] -
+  \end{tabu}
+\end{table}
+
 \subsection{修改一行内的字体和对齐格式}
 
-\subsection{其它功能}
-\subsection{修改一行内的字体和对齐格式}
+\begin{verbatim}
+\rowfont [alignment]{font specification}
+\end{verbatim}
+
+\verb!\rowfont!可以设置一整行文字的字体。同时还可以设置该行内的对齐方式。
+
+参见源码，体会下表功能。
+
+\begin{table}[H]
+  \centering
+  \begin{tabu}{|X|X|}
+    \tabucline-
+    % \rowfont[c]{\bfseries}  %设置首行为居中对齐 c选项不好使
+    \rowfont{\centering \bfseries}  %设置首行为居中对齐，代之以\centering
+    This  & Is  \\ \tabucline[on 2pt,blue]-
+    % 第二行按默认左对齐
+    tabu  & package  \\ \tabucline[off 2pt blue]-
+    % 第三行设置为右对齐
+    \rowfont[r]{\itshape}
+    for &\texttt{tabu} and \texttt{longtabu} \\\tabucline-
+  \end{tabu}
+\end{table}
 
 \end{document}
 %%% Local Variables:
