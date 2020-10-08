@@ -1,0 +1,160 @@
+\documentclass{article}
+\usepackage[UTF8]{ctex}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{lastpage}
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage{caption}% 解决表格标题与下方表格过近
+\usepackage{csvsimple}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{cprotect}% http://ctan.org/pkg/cprotect
+\usepackage{graphicx}
+%%%表格标题与前后文字间距%%%%%%%%%%%%%%%%%
+\setlength{\abovecaptionskip}{2pt} 
+\setlength{\belowcaptionskip}{2pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhead[C]{}
+\fancyhead[L]{minipage宏包}
+\fancyhead[R]{哈尔滨合正科技}
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\title{minipage宏包}
+\author{哈尔滨合正科技}
+\date{2020年10月8日}
+
+\begin{document}
+\maketitle
+
+\texttt{minipage}是一个经常被使用到的环境。但它的文档目前是用德文书写的。
+本文内容来源于：\url{http://joshua.smcvt.edu/latex2e/minipage.html}。
+
+环境语法为：
+
+\begin{verbatim}
+\begin{minipage}[position][height][inner-pos]{width}
+  contents
+\end{minipage}
+\end{verbatim}
+
+\texttt{position}有3个选项：
+\begin{description}
+\item[c] 居中对齐；
+\item[t] 顶对齐；
+\item[b] 底对齐；
+\end{description}
+
+\texttt{height}是一个长度参数。
+
+\texttt{inner-pos}是内部对齐参数，有4个选项：
+
+\texttt{position}有4个选项：
+\begin{description}
+\item[c] 居中对齐；
+\item[t] 顶对齐；
+\item[b] 底对齐；
+\item[s] Sretch contents out vertically; it must contain vertically
+  stretchable space. 这句话没看懂。
+\end{description}
+
+示例(为了显示minipage的大小，将其插入到了一个tabular表格中)：
+
+\vskip1em
+\begin{tabular}{|c|}
+  \hline
+  ---
+\begin{minipage}[t][2in][c]{1.2in}
+  2inx2in 的minipage\\居中对齐的效果
+\end{minipage}--- \\
+  \hline
+\end{tabular}
+\begin{tabular}{|c|}
+  \hline
+  ---
+\begin{minipage}[c][2in][c]{1.2in}
+  2inx2in 的minipage\\居中对齐的效果
+\end{minipage}--- \\
+  \hline
+\end{tabular}
+\begin{tabular}{|c|}
+  \hline
+  ---
+\begin{minipage}[b][2in][c]{1.2in}
+  2inx2in 的minipage\\居中对齐的效果
+\end{minipage}--- \\
+  \hline
+\end{tabular}
+\vskip1em
+
+默认情况下，\texttt{minipage}中的段落起始是没有缩进的。可设置缩进可以在
+内容开始处设置：
+
+\verb!\setlength{\parindent}{1pc}!
+
+\vskip1em
+\begin{tabular}{|c|}
+  \hline
+  ---
+\begin{minipage}[b][2in][c]{1.2in}
+  \setlength{\parindent}{1pc}
+  居中对齐的效果
+  居中对齐的效果
+  居中对齐的效果
+  居中对齐的效果
+\end{minipage}--- \\
+  \hline
+\end{tabular}
+\vskip1em
+
+脚注在\texttt{minipage}中是有效的。因为脚注在插图或表格中特别有用。脚注
+显示在\texttt{minipage}中的底部，而不是页面的底部。
+
+\begin{center}           % center the minipage on the line
+\begin{minipage}{2.5in}
+  \begin{center}         % center the table inside the minipage
+    \begin{tabular}{ll}
+      \textsc{Monarch}  &\textsc{Reign}             \\ \hline
+      Elizabeth II      &63 years\footnote{to date} \\
+      Victoria          &63 years                   \\
+      George III        &59 years
+    \end{tabular}
+  \end{center}  
+\end{minipage}
+\end{center}
+
+体会一下下面的例子。在一个插图右侧，以居中对齐的方式放置了一个
+\texttt{minipage}环境，然而在里面放置了一个表格。
+
+注意，\texttt{minpage}里面是不能包含浮动体的。
+
+\newcommand*{\vcenteredhbox}[1]{\begin{tabular}{@{}c@{}}#1\end{tabular}}
+\begin{center}
+  \vcenteredhbox{\includegraphics[width=0.3\textwidth]{logo.png}}
+  \hspace{0.1\textwidth}
+  \begin{minipage}{0.5\textwidth}
+    \begin{tabular}{r|l}
+      \multicolumn{1}{r}{Borough} &Pop (million)  \\ \hline
+      The Bronx      &$1.5$  \\
+      Brooklyn       &$2.6$  \\
+      Manhattan      &$1.6$  \\
+      Queens         &$2.3$  \\
+      Staten Island  &$0.5$  
+    \end{tabular}
+  \end{minipage}              
+\end{center}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
