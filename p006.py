@@ -13,7 +13,8 @@ if __name__ == '__main__':
     table = Table(position='htpb')
 
     table.append(Command('centering'))
-    table.append(Command('caption', '外观检测'))
+    # table.append(Command('caption', '外观检测'))
+    table.add_caption("外观检测")
     table.append(Command('label', 'tbl:inspect'))
 
     tabu = Tabu("X[l] X[3,l]")
@@ -21,6 +22,10 @@ if __name__ == '__main__':
     # tabu.add_topline()
     tabu.add_row(["date", "description"], mapper=bold)
     tabu.add_hline()
+    tabu.add_row(["2020-10-05", "meeting"])
+    tabu.add_row(["2020-10-05", "meeting"])
+    tabu.add_row(["2020-10-05", "meeting"])
+    tabu.add_row(["2020-10-05", "meeting"])
     tabu.add_row(["2020-10-05", "meeting"])
 
     table.append(tabu)

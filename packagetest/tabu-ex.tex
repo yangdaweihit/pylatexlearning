@@ -286,7 +286,7 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
   \centering
   % 除了第一列是按实际所需宽度定义外
   % 其它两列按剩余宽度平分
-  \begin{tabularx}{0.8\textwidth}{|c|X|X|}
+  \begin{tabularx}{0.8\textwidth}{|c|*{2}{X|}}
     \hline
     a &  b & c \\
     \hline
@@ -326,13 +326,13 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
 
 \begin{longtable}{@{*}r||p{2in}@{*}}
 
-  \caption{长表实例} \\
+  \caption{长表实例}\label{tbl:longtable} \\
   \toprule
   首列    &  次列  \\
   \midrule
   \endfirsthead
-
-  \caption{长表实例(续表)} \\
+  
+  \multicolumn{2}{c}{表\ref{tbl:longtable}: 长表实例(续表)}\\%
   \toprule
   \textbf{首列}    &  \textbf{次列}  \\
   \midrule
@@ -470,13 +470,17 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
 
 在下表源码中，注意计数器及\texttt{csvexample}的使用。
 
-\newcounter{elio}\setcounter{elio}{0} 
+\newcounter{elio}
+\setcounter{elio}{0} 
 \begin{longtabu} to 100mm {X[3, l] X[3, l] X[3, c] X[2, c] X[2, r] }
+
   \caption{longtabu长表实例}\label{tbl:longtabu} \\
+
   \toprule
   名 & 姓 & 入学考试 & 性别  &  年级   \\
   \midrule
   \endfirsthead
+
   \multicolumn{5}{c}{
   \refstepcounter{elio}
   表 \ref{tbl:longtabu}：longtabu长表实例 (续表\theelio{})} \\
@@ -528,12 +532,13 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
 在\verb!\tabuphantomline!之后，不得跟
 上\verb!\cr!或\verb!\\!或\verb!\tabularnewline!。见下面的示例：
 
-\begin{tabu}{|X|X|X[2]|} \tabucline-
+\begin{tabu}{|X|X|X[2]|}
+  \tabucline-
   a & b & c \\
   \tabucline-
   \multicolumn{2}{|c|}{Hello} & World \\
   \tabucline-
-\tabuphantomline  %注意此处要加上这个命令
+  \tabuphantomline  %注意此处要加上这个命令
 \end{tabu}
 
 \cprotect\subsubsection{\verb!\tabulinesep!和\verb!\extrarowsep!—控制竖向
@@ -550,7 +555,7 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
 \begin{table}[H]
   \setlength\doublerulesep{1pt}
   \centering
-  \begin{tabu} to 0.8\textwidth {|[1.5pt red] |[0.5pt blue] X[c] | X[c] | [0.5pt] |
+  \begin{tabu} to 0.8\textwidth {| |[1.5pt red] |[0.5pt blue] X[c] | X[c] | [0.5pt] |
       [1.5pt ]} 
     Hello & World \\
     Hello & World \\
@@ -654,7 +659,8 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
   \begin{tabu}{|X|X|}
     \tabucline-
     % \rowfont[c]{\bfseries}  %设置首行为居中对齐 c选项不好使
-    \rowfont{\centering \bfseries}  %设置首行为居中对齐，代之以\centering
+    % \rowfont{\centering \bfseries}  %设置首行为居中对齐，代之以\centering
+    \rowfont[c]{\bfseries}  %设置首行为居中对齐，代之以\centering
     This  & Is  \\ \tabucline[on 2pt,blue]-
     % 第二行按默认左对齐
     tabu  & package  \\ \tabucline[off 2pt blue]-
