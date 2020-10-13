@@ -17,7 +17,7 @@ if __name__ == '__main__':
     table.add_caption("外观检测")
     table.append(Command('label', 'tbl:inspect'))
 
-    tabu = Tabu(table_spec="X[l] X[3,l]")
+    tabu = Tabu(table_spec="X[l] X[3,l]", to='0.8\linewidth')
 
     # tabu.add_topline()
     tabu.add_row(["date", "description"], mapper=bold)
