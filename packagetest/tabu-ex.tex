@@ -12,6 +12,7 @@
 \usepackage{lastpage}
 \usepackage[dvipsnames,svgnames]{xcolor}
 \usepackage{caption}% 解决表格标题与下方表格过近
+\usepackage{graphicx}
 \usepackage{csvsimple}
 \usepackage{cprotect}% http://ctan.org/pkg/cprotect
 %%%表格标题与前后文字间距%%%%%%%%%%%%%%%%%
@@ -661,16 +662,22 @@ Tabular最复杂的是\textbf{列式标记}，这一部分是必须填写的参�
     % \rowfont[c]{\bfseries}  %设置首行为居中对齐 c选项不好使
     % \rowfont{\centering \bfseries}  %设置首行为居中对齐，代之以\centering
     \rowfont[c]{\bfseries}  %设置首行为居中对齐，代之以\centering
-    This  & Is  \\ \tabucline[on 2pt,blue]-
+    This  & Is \\ \tabucline[on 2pt,blue]-
     % 第二行按默认左对齐
-    tabu  & package  \\ \tabucline[off 2pt blue]-
+    tabu  & package  如图\ref{fig:logo}所示，链不到图上去   \\ \tabucline[off 2pt blue]-
     % 第三行设置为右对齐
     \rowfont[r]{\itshape}
     for &\texttt{tabu} and \texttt{longtabu} \\\tabucline-
   \end{tabu}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\linewidth]{logo.png}
+  \caption{logo}\label{fig:logo}
+\end{figure}
 \end{document}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t

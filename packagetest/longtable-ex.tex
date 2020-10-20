@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{multirow,hhline,graphicx,array}
+\usepackage{tabu}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage[UTF8]{ctex}
+
+\begin{document}
+\def\mytext{你你你你你你你好好好好好好好}
+
+\begin{tabu} to 0.8\textwidth {|M{0.1in}|p{0.7in}|p{1.4in}|X|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+   & \textbf{Factor Name} & \textbf{Explanation} & \textbf{Rationale} \\
+  \hline
+  \multirow{5}{*}{\rotatebox[origin=c]{90}{test}}& body1 &body2 &\multirow{2}{*}{\parbox{2in}{body3}} \\
+  \hhline{~--~}
+   & 1 & 2 \newline & \\
+   \hhline{~---}
+   & 3 & 3 & \multirow{2}{*}{5} \\
+   \hhline{~--}
+   & 6 & 7 & \mytext \\
+   \hhline{----}
+\end{tabu}
+
+\end{document}
+
+% 问题：https://paste.ubuntu.com/p/3BrbRxjC4V/
